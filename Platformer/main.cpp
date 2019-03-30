@@ -4,33 +4,62 @@ using namespace sf;
 
 Clock tick;
 const int ground = 560;			// Уровень земли в мире
-const int baseSpeed = 6;		// Базовая скорость юнитов
+#define baseSpeed  6		// Базовая скорость юнитов
 const float acc = 8;			// Ускорение свободного падения в мире
-const int dispHight = 700, dispWidth = 700;
+#define SizeBlock  70		// Размеры элементарной текстуры
+#define blocksHight  10
+#define blocksWidth  14   // Размеры окна игры в количестве блоков
+const int dispHight = blocksHight *SizeBlock, dispWidth = blocksWidth * SizeBlock;  // Пискельные размеры экрана
 String Texture_Folder = "G:/Projects/Textures/";
+
+String Tilemap[blocksHight] = {
+		"............................",
+		"............................",
+		"............................",
+		"............................",
+		"............................",
+		"............................",
+		"............................",
+		"............................",
+		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+};
 
 class map {
 public:
-	String Tilemap[10] = {
-		"..........",
-		"..........",
-		"..........",
-		"..........",
-		"..........",
-		"..........",
-		"..........",
-		"..........",
-		"GGGGGGGGGG",
-		"GGGGGGGGGG"
-	};
-
+	
 	Texture t, bg;
 	Sprite s;
-	map() {
-		bg.loadFromFile(Texture_Folder + "Base pack/bg.PNG");  // Задний план
+	map() 
+	{
+		bg.loadFromFile(Texture_Folder + "Base pack/bg.PNG");			// Задний план
 		t.loadFromFile(Texture_Folder + "Base pack/Tiles/Grass.PNG");
 	}
 
+};
+
+class camera
+{
+private:
+	String camera_buffer[blocksHight];
+	unsigned int current_location;
+
+	void set_location(int location)
+	{
+		current_location = location;
+	}
+public:
+	camera()
+	{
+		current_location = 0;
+		for (int i = 0; i < blocksHight; i++)
+		{
+			for (int j = 0; j < blocksWidth; j++)
+			{
+				camera_buffer[i][j] = Tilemap[i][j + current_location];
+			}
+		}
+	}
 };
 
 
@@ -117,7 +146,8 @@ int main()
 
 	player bob(0, 0, "p1_spritesheet.PNG");
 	map map;
-	RenderWindow window(VideoMode(dispWidth, dispHight), "Video-Game"/*,Style::Fullscreen*/);
+	camera camera1;
+	RenderWindow window(VideoMode(dispWidth, dispHight), "Aliens"/*,Style::Fullscreen*/);
 
 	while (window.isOpen())
 	{
@@ -161,16 +191,16 @@ int main()
 		bob.update(time);
 		window.clear(Color::White);
 
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				if (map.Tilemap[i][j] == '.') {
+		for (int i = 0; i < blocksHight; i++) {
+			for (int j = 0; j < blocksWidth; j++) {
+				if (Tilemap[i][j] == '.') {
 					map.s.setTexture(map.bg);
-					map.s.setPosition(j * 70, i * 70);
+					map.s.setPosition(j * SizeBlock, i * SizeBlock);
 					window.draw(map.s);
 				}
-				if (map.Tilemap[i][j] == 'G') {
+				if (Tilemap[i][j] == 'G') {
 					map.s.setTexture(map.t);
-					map.s.setPosition(j * 70, i * 70);
+					map.s.setPosition(j * SizeBlock, i * SizeBlock);
 					window.draw(map.s);
 				}
 			}
