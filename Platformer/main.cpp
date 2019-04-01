@@ -5,17 +5,19 @@
 using namespace sf;
 
 Clock tick;
-#define baseSpeed 6			// Базовая скорость юнитов
-#define G_const	7			// Ускорение свободного падения в мире
-#define SizeBlock 70		// Размеры элементарной текстуры
-#define blocksHight	10					//
-#define blocksWidth	14					// Размеры окна игры в количестве блоков
-#define dispHight  blocksHight *SizeBlock	 //
-#define dispWidth  blocksWidth * SizeBlock  // Пискельные размеры экрана
+const short baseSpeed = 6;		// Базовая скорость юнитов
+const float g_gravity = 7;  // Ускорение свободного падения
+
 
 String textureFolder = "G:/Projects/Textures/";
 
-String Tilemap[blocksHight] = {
+
+
+class map 
+{
+private:
+/*	String *Tilemap = new String[g_gravity]
+	{
 		"............................",
 		"............................",
 		"............................",
@@ -26,9 +28,7 @@ String Tilemap[blocksHight] = {
 		"............................",
 		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG"
-};
-
-class map {
+	};*/
 public:
 	
 	Texture t, bg;
@@ -44,6 +44,11 @@ public:
 class camera
 {
 private:
+	int SizeBlock = 70;		// Размеры элементарной текстуры
+	const short blocksHight = 10;					//
+	const short blocksWidth = 14;					// Размеры окна игры в количестве блоков
+	int dispHight = blocksHight * SizeBlock;	 //
+	int dispWidth = blocksWidth * SizeBlock;  // Пискельные размеры экрана
 	char camera_buffer[blocksHight][14];
 	unsigned int current_location;
 
