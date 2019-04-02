@@ -1,23 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include "Camera.h"
+
 
 using namespace sf;
 
 Clock tick;
-const short baseSpeed = 6;		// Базовая скорость юнитов
-const float g_gravity = 7;  // Ускорение свободного падения
 
-
-String textureFolder = "G:/Projects/Textures/";
-
-
-
-class map 
-{
-private:
-/*	String *Tilemap = new String[g_gravity]
-	{
+String Tilemap[10] = {
 		"............................",
 		"............................",
 		"............................",
@@ -28,58 +19,15 @@ private:
 		"............................",
 		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 		"GGGGGGGGGGGGGGGGGGGGGGGGGGGG"
-	};*/
-public:
-	
-	Texture t, bg;
-	Sprite s;
-	map() 
-	{
-		bg.loadFromFile(Texture_Folder + "Base pack/bg.PNG");			// Задний план
-		t.loadFromFile(Texture_Folder + "Base pack/Tiles/Grass.PNG");
-	}
-
-};
-
-class camera
-{
-private:
-	int SizeBlock = 70;		// Размеры элементарной текстуры
-	const short blocksHight = 10;					//
-	const short blocksWidth = 14;					// Размеры окна игры в количестве блоков
-	int dispHight = blocksHight * SizeBlock;	 //
-	int dispWidth = blocksWidth * SizeBlock;  // Пискельные размеры экрана
-	char camera_buffer[blocksHight][14];
-	unsigned int current_location;
-
-	void set_location(int location)
-	{
-		current_location = location;
-	}
-public:
-	camera()
-	{
-		current_location = 0;
-		for (int i = 0; i < blocksHight; i++)
-		{
-			for (int j = 0; j < blocksWidth; j++)
-			{
-				camera_buffer[i][j] = Tilemap[i][j + current_location];
-			}
-		}
-	}
-};
-
-
+}; 
 
 
 int main()
 {
-
-	Player bob(0, 0, "p1_spritesheet.PNG");
-	map map;
-	camera camera1;
-	RenderWindow window(VideoMode(dispWidth, dispHight), "Aliens"/*,Style::Fullscreen*/);
+	Camera mainCamera(10, 14, 70, Tilemap[10]);
+	Player bob(0, 0, mainCamera);
+	RenderWindow window(VideoMode(mainCamera.getDispWidth, mainCamera.getDispHight), "Aliens"/*,Style::Fullscreen*/);
+	RenderWindow* Pwindow;
 
 	while (window.isOpen())
 	{
@@ -103,7 +51,7 @@ int main()
 
 		if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) 
 		{
-			bob.set_dir = 1;	bob.setSpeed(1);
+			bob.setDir = 1;	bob.setSpeed(1);
 			bob.moveRight(time);
 
 		}
@@ -117,26 +65,14 @@ int main()
 
 		if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) 
 		{
-			bob.set_dir = 4;	bob.setSpeed(1);
+			bob.setDir = 4;	bob.setSpeed(1);
 		}
 
 		bob.update(time);
 		window.clear(Color::White);
 
-		for (int i = 0; i < blocksHight; i++) {
-			for (int j = 0; j < blocksWidth; j++) {
-				if (Tilemap[i][j] == '.') {
-					map.s.setTexture(map.bg);
-					map.s.setPosition(j * SizeBlock, i * SizeBlock);
-					window.draw(map.s);
-				}
-				if (Tilemap[i][j] == 'G') {
-					map.s.setTexture(map.t);
-					map.s.setPosition(j * SizeBlock, i * SizeBlock);
-					window.draw(map.s);
-				}
-			}
-		}
+		mainCamera.renderMap(Pwindow);
+
 		window.draw(bob.setSprite);
 		window.display();
 	}
