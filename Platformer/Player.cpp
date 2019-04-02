@@ -1,16 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Camera.h"
+
 using namespace sf;
 
 
-Player::Player(int xst, int yst, Camera mainCamera) 
+Player::Player(int xst, int yst, int DispHight)
 {
 
 	texture.loadFromFile(textureFolder_ + +"Base pack/Player/" + "p1_spritesheet.PNG");	// «агружаем текстурку
 	sprite.setTexture(texture);			//
 	sprite.setTextureRect(IntRect(xst, yst, width_, hight_));
-	x_ = width_;	y_ = mainCamera.getDispHight - hight_;
+	x_ = width_;	
+	y_ = DispHight - hight_;
 	sprite.setPosition(x_, y_);
 	dx_ = dy_ = 0;
 	currentFrame_ = 0;
@@ -37,11 +39,23 @@ void Player::moveRight(float time)
 
 
 
-void Player::setSpeed(float speedup) {			// ћетод установки скорости относительно базовой
+void Player::setSpeed(float speedup) // ћетод установки скорости относительно базовой
+{			
 	speed_ = speedup;
 }
 
 
+
+Sprite Player::getSprite()
+{
+	return sprite;
+}
+
+
+void Player::setDir(int Dir)
+{
+	dir_ = Dir;
+}
 
 void Player::update(float time) 
 {

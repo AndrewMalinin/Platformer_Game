@@ -1,12 +1,14 @@
 #pragma once
+using namespace sf;
 
 class Player 
 {
 private:
+	String textureFolder_ = "G:/Projects/Textures/";
 	const int width_ = 73;			// Ширина текстурки
 	const int hight_ = 97;			// Высота текстурки
 	const short baseSpeed_ = 6;		// Базовая скорость юнитов
-	String textureFolder_ = "G:/Projects/Textures/";
+
 	float currentFrame_;			// Счётчик текущего кадра 
 	unsigned short int frames_ = 6;	// Количество кадров в анимации
 	float dx_, dy_;					// Приращение координаты
@@ -17,10 +19,9 @@ private:
 	float x_, y_;					// Текущие координаты игрока
 	float jumpTimePointer_;			// Счётчик прошедшего с момента прыжка времени
 	const float gravity_ = 7;		// Ускорение свободного падения
-
 public:
 	
-	Player(int xst, int yst, Camera mainCamera);
+	Player(int xst, int yst, int DispHight);
 
 	void moveLeft(float time);
 
@@ -30,7 +31,7 @@ public:
 
 	void setDir(int dir);
 
-	void setSprite();
+	Sprite getSprite();
 	
 	void jump();
 

@@ -1,8 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Player.h"
 #include "Camera.h"
-
+#include "Player.h"
 
 using namespace sf;
 
@@ -24,10 +23,10 @@ String Tilemap[10] = {
 
 int main()
 {
-	Camera mainCamera(10, 14, 70, Tilemap[10]);
-	Player bob(0, 0, mainCamera);
-	RenderWindow window(VideoMode(mainCamera.getDispWidth, mainCamera.getDispHight), "Aliens"/*,Style::Fullscreen*/);
-	RenderWindow* Pwindow;
+	Camera mainCamera(10, 14, 70, Tilemap);
+	Player bob(0, 0, mainCamera.getDispHight());
+	RenderWindow window(VideoMode(mainCamera.getDispWidth(), mainCamera.getDispHight()), "Aliens"/*,Style::Fullscreen*/);
+	RenderWindow* Pwindow = &window;
 
 	while (window.isOpen())
 	{
@@ -45,27 +44,27 @@ int main()
 
 		if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
 		{
-			bob.setDir = 2;	bob.setSpeed(1);
+			bob.setDir(2);	bob.setSpeed(1);
 			bob.moveLeft(time);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) 
 		{
-			bob.setDir = 1;	bob.setSpeed(1);
+			bob.setDir(1);	bob.setSpeed(1);
 			bob.moveRight(time);
 
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
 		{
-				bob.setDir = 3;
-				bob.jump();
-				bob.setSpeed(30);
+			bob.setDir(3);
+		//	bob.jump();
+			bob.setSpeed(30);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) 
 		{
-			bob.setDir = 4;	bob.setSpeed(1);
+			bob.setDir(4);	bob.setSpeed(1);
 		}
 
 		bob.update(time);
@@ -73,7 +72,7 @@ int main()
 
 		mainCamera.renderMap(Pwindow);
 
-		window.draw(bob.setSprite);
+		window.draw(bob.getSprite());
 		window.display();
 	}
 
