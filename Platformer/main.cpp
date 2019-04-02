@@ -59,7 +59,7 @@ int main()
 		{
 			bob.setDir(3);
 		//	bob.jump();
-			bob.setSpeed(30);
+			bob.setSpeed(5);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) 

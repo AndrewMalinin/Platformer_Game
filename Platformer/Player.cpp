@@ -12,11 +12,12 @@ Player::Player(int xst, int yst, int DispHight)
 	sprite.setTexture(texture);			//
 	sprite.setTextureRect(IntRect(xst, yst, width_, hight_));
 	x_ = width_;	
+	dispHight_ = DispHight;
 	y_ = DispHight - hight_;
 	sprite.setPosition(x_, y_);
 	dx_ = dy_ = 0;
 	currentFrame_ = 0;
-	speed_ = 1.0;					// Устанавливаем начальную скорость героя
+	speed_ = 0;				// Устанавливаем начальную скорость героя
 }
 
 
@@ -46,32 +47,80 @@ void Player::setSpeed(float speedup) // Метод установки скорости относительно ба
 
 
 
+void Player::setCurrentFrame(int FrameNo)
+{
+	currentFrame_ = FrameNo;
+}
+
+
 Sprite Player::getSprite()
 {
 	return sprite;
 }
 
 
-void Player::setDir(int Dir)
+void Player::setDir(int Directory) 
 {
-	dir_ = Dir;
+	dir_ = Directory;
 }
 
 void Player::update(float time) 
 {
 
 	switch (dir_) {
-	case 1:		dx_ = (baseSpeed_ * speed_)*time;		dy_ = 0;				break;
-	case 2:		dx_ = -(baseSpeed_* speed_)*time;		dy_ = 0;				break;
-	case 3:		dx_ = 0;		dy_ = (baseSpeed_ * speed_)*time + gravity_;	break;
+	case 1:
+	{
+	
+		if (speed_ > 0)
+		{
+			dx_ = (baseSpeed_ * speed_)*time;		
+			speed_ -= friction;
+		}
+		else {
+			speed_ = 0;
+		}
+		dy_ = 0;
+	}break;
+	
+
+
+
+	case 2: 
+	{
+
+		if (speed_ > 0)
+		{
+			dx_ = -(baseSpeed_* speed_)*time;
+			speed_ -= friction;
+		}
+		else {
+			speed_ = 0;
+		}
+		dy_ = 0;
+	}break;		
+
+	case 3:	
+	{
+			dy_ = -(baseSpeed_ * speed_)*time;
+
+
+		dx_ = 0;
+	}break;
 	case 4:		dx_ = 0;		dy_ = (baseSpeed_ * speed_)*time;				break;
 
 	}
 
 
-	x_ += dx_;
-	y_ += dy_;
+	x_ += dx_; 
+	if (y_ > -dispHight_+hight_)
+	{
+		y_ += dy_;
+		dy_ -= gravity_;
+	}
+	else {
+		y_ = -dispHight_+hight_;
+	}
 	sprite.setPosition(x_, y_);
 
-	speed_ = 0;
+
 }
