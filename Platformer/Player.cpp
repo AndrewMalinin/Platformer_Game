@@ -5,19 +5,19 @@
 using namespace sf;
 
 
-Player::Player(int xst, int yst, int DispHight)
+Player::Player(int xst, int yst, int DispHight, int DispWidth)
 {
 
 	texture.loadFromFile(textureFolder_ + +"Base pack/Player/" + "p1_spritesheet.PNG");	// «агружаем текстурку
 	sprite.setTexture(texture);			//
-	sprite.setTextureRect(IntRect(xst, yst, width_, hight_));
-	x_ = width_;	
+	sprite.setTextureRect(IntRect(xst, yst, WIDTH_, HIGHT_));
+	x_ = WIDTH_;
 	dispHight_ = DispHight;
-	y_ = DispHight - hight_;
+	dispWidth_ = DispWidth;
+	y_ = DispHight - HIGHT_;
 	sprite.setPosition(x_, y_);
 	dx_ = dy_ = 0;
-	currentFrame_ = 0;
-	speed_ = 0;				// ”станавливаем начальную скорость геро€
+	currentFrame_ = 0;			
 }
 
 
@@ -26,7 +26,7 @@ void Player::moveLeft(float time)
 {
 	currentFrame_ += 0.09*time;
 	if (currentFrame_ > frames_) currentFrame_ -= frames_;
-	sprite.setTextureRect(IntRect(width_ * int(currentFrame_) + width_, 0, -width_, hight_));
+	sprite.setTextureRect(IntRect(WIDTH_ * int(currentFrame_) + WIDTH_, 0, -WIDTH_, HIGHT_));
 }
 
 
@@ -35,14 +35,15 @@ void Player::moveRight(float time)
 {
 	currentFrame_ += 0.09*time;
 	if (currentFrame_ > frames_) currentFrame_ -= frames_;
-	sprite.setTextureRect(IntRect(width_ * int(currentFrame_), 0, width_, hight_));
+	sprite.setTextureRect(IntRect(WIDTH_ * int(currentFrame_), 0, WIDTH_, HIGHT_));
 }
 
 
 
-void Player::setSpeed(float speedup) // ћетод установки скорости относительно базовой
+void Player::setSpeedXY(float speedUpX, float speedUpY) // ћетод установки скорости относительно базовой
 {			
-	speed_ = speedup;
+	speedX_ = speedUpX;
+	speedY_ = -speedUpY;
 }
 
 
@@ -59,68 +60,63 @@ Sprite Player::getSprite()
 }
 
 
-void Player::setDir(int Directory) 
+void Player::setDir(short Directory) 
 {
 	dir_ = Directory;
 }
 
 void Player::update(float time) 
-{
-
-	switch (dir_) {
-	case 1:
+{	
+	switch (dir_)
 	{
-	
-		if (speed_ > 0)
+	case 1 :
+
+		dx_ = speedX_ * time;
+		dy_ = speedY_ * time/*- GRAVITY_*/;
+		speedX_ += FRICTION_;
+		if (speedX_ > 0)
+
+	break;
+	case 2 : 
+
+		dx_ = speedX_ * time;
+		dy_ = speedY_ * time/*- GRAVITY_*/;
+		speedX_ -= FRICTION_;
+		if (speedX_ < 0)
 		{
-			dx_ = (baseSpeed_ * speed_)*time;		
-			speed_ -= friction;
+			speedX_ = 0;
 		}
-		else {
-			speed_ = 0;
-		}
-		dy_ = 0;
-	}break;
-	
 
 
+	break;
+	case 3 :
+		dx_ = speedX_ * time;
+		dy_ = speedY_ * time;
 
-	case 2: 
-	{
-
-		if (speed_ > 0)
-		{
-			dx_ = -(baseSpeed_* speed_)*time;
-			speed_ -= friction;
-		}
-		else {
-			speed_ = 0;
-		}
-		dy_ = 0;
-	}break;		
-
-	case 3:	
-	{
-			dy_ = -(baseSpeed_ * speed_)*time;
-
-
-		dx_ = 0;
-	}break;
-	case 4:		dx_ = 0;		dy_ = (baseSpeed_ * speed_)*time;				break;
-
+	break;
+	case 4 : break;
 	}
 
-
-	x_ += dx_; 
-	if (y_ > -dispHight_+hight_)
+	if (((x_) < 0))
 	{
-		y_ += dy_;
-		dy_ -= gravity_;
+		x_ = 0; dx_ = 0;
 	}
-	else {
-		y_ = -dispHight_+hight_;
+	if((x_ + WIDTH_) > dispWidth_)
+	{
+		x_ = dispWidth_ - WIDTH_; dx_ = 0; speedX_ = 0;
 	}
-	sprite.setPosition(x_, y_);
 
+	if (y_ > dispHight_ - HIGHT_)
+	{
+		y_ = dispHight_- HIGHT_; speedY_ = 0; 	
+	}
+	else
+	{
+		speedY_ += GRAVITY_;
+	}
+	speedY_ += GRAVITY_;
 
+	x_ += dx_;
+	y_ += dy_;
+	sprite.setPosition(x_,y_);
 }

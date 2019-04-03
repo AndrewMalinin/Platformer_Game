@@ -24,8 +24,8 @@ String Tilemap[10] = {
 int main()
 {
 	Camera mainCamera(10, 14, 70, Tilemap);
-	Player bob(0, 0, mainCamera.getDispHight());
-	RenderWindow window(VideoMode(mainCamera.getDispWidth(), mainCamera.getDispHight()), "Aliens"/*,Style::Fullscreen*/);
+	Player bob(0, 0, mainCamera.getDispHight(), mainCamera.getDispWidth());
+	RenderWindow window(VideoMode(mainCamera.getDispWidth(), mainCamera.getDispHight()), "Aliens");
 	RenderWindow* Pwindow = &window;
 
 	while (window.isOpen())
@@ -44,13 +44,13 @@ int main()
 
 		if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
 		{
-			bob.setDir(2);	bob.setSpeed(1);
+			bob.setDir(1);	bob.setSpeedXY(-5, 0);
 			bob.moveLeft(time);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) 
 		{
-			bob.setDir(1);	bob.setSpeed(1);
+			bob.setDir(2);	bob.setSpeedXY(5, 0);
 			bob.moveRight(time);
 
 		}
@@ -59,19 +59,18 @@ int main()
 		{
 			bob.setDir(3);
 		//	bob.jump();
-			bob.setSpeed(5);
+			bob.setSpeedXY(0, 20);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) 
 		{
-			bob.setDir(4);	bob.setSpeed(1);
+			bob.setDir(4);	bob.setSpeedXY(0, -1);
 		}
 
 		bob.update(time);
 		window.clear(Color::White);
 
 		mainCamera.renderMap(Pwindow);
-
 		window.draw(bob.getSprite());
 		window.display();
 	}
